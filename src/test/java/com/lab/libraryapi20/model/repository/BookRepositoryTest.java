@@ -34,7 +34,7 @@ public class BookRepositoryTest {
 
         entityManager.persist(book);
 
-        //execoção
+        //execução
         boolean exists = bookRepository.existsByIsbn(isbn);
 
         //verificação
@@ -51,7 +51,7 @@ public class BookRepositoryTest {
         Book book = Book.builder().title("As aventuras").author("Fulano").isbn(isbn).build();
 
 
-        //execoção
+        //execução
         boolean exists = bookRepository.existsByIsbn("123");
 
         //verificação
