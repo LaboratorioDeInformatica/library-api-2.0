@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -41,8 +42,30 @@ public class BookController {
 
     @GetMapping("{id}")
     public BookDTO get(@PathVariable Long id){
-       Book book = service.findById(id).get();
-        return modelMapper.map(book, BookDTO.class);
+        return service.findById(id)
+                .map( book -> (modelMapper.map(book, BookDTO.class) )).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        Book book =  service.findById(id).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));;
+        service.delete(book);
+    }
+
+    @PutMapping("{id}")
+    public BookDTO update(@PathVariable Long id, @RequestBody BookDTO dto){
+        return service.findById(id)
+                .map( book -> {
+
+                    book.setAuthor(dto.getAuthor());
+                    book.setTitle(dto.getTitle());
+                    service.update(book);
+                    return modelMapper.map(book, BookDTO.class);
+
+                })
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
