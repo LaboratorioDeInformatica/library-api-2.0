@@ -101,7 +101,7 @@ public class BookServiceTest {
 
     @Test
     @DisplayName("Deve retornar vazio ao obter um livro por Id quando ele não existir na base")
-    public void bookNotFounddtest(){
+    public void bookNotFoundtest(){
         //cenario
         Long id = 1L;
 
@@ -112,6 +112,43 @@ public class BookServiceTest {
 
         //verificações
         assertThat( book.isPresent()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Deve atualizar um livro")
+    public void updateBookTest(){
+        //cenario
+        Long id = 1L;
+        Book book = createValidBook();
+        book.setId(id);
+        Mockito.when(repository.save(book)).thenReturn(book);
+        
+        //execução
+        Book updateBook = service.update(book);
+
+        //verificação
+        assertThat(updateBook.getIsbn()).isEqualTo(book.getIsbn());
+        assertThat(updateBook.getAuthor()).isEqualTo(book.getAuthor());
+        assertThat(updateBook.getTitle()).isEqualTo(book.getTitle());
+        assertThat(updateBook.getAuthor()).isEqualTo(book.getAuthor());
+
+    }
+
+    @Test
+    @DisplayName("Deve lançar um erro para livro nulo")
+    public void updateBookExcetionTest(){
+        //cenario
+        Book book = new Book() ;
+        book.setId(null);
+
+        //execução
+        Throwable exception = Assertions.catchThrowable(() -> service.update(book));
+
+        //verificação
+        assertThat(exception).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Book  can be null");
+
+        Mockito.verify(repository, Mockito.never()).save(book);
     }
 
 }
