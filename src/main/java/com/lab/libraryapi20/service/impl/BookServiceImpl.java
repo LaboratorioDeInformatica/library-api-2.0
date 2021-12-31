@@ -28,7 +28,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> findById(Long id) {
-        return null;
+        return repository.findById(id);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book update(Book book) {
-return null;
+        return null;
     }
 }
