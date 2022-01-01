@@ -142,13 +142,43 @@ public class BookServiceTest {
         book.setId(null);
 
         //execução
-        Throwable exception = Assertions.catchThrowable(() -> service.update(book));
+        //execução
+        org.junit.jupiter.api.Assertions.assertThrows( IllegalArgumentException.class, () ->  service.update(book));
 
         //verificação
-        assertThat(exception).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Book  can be null");
-
         Mockito.verify(repository, Mockito.never()).save(book);
+    }
+
+    @Test
+    @DisplayName("Deve deletar um livro")
+    public void deleteBookTest(){
+        //cenario
+        Long id = 1L;
+        Book book = createValidBook();
+        book.setId(id);
+        Mockito.when(repository.save(book)).thenReturn(book);
+
+        //execução
+         org.junit.jupiter.api.Assertions.assertDoesNotThrow( () ->  service.delete(book));
+
+        //verificação
+        Mockito.verify(repository, Mockito.atLeastOnce()).delete(book);
+
+
+    }
+
+    @Test
+    @DisplayName("Deve lançar um erro para deletar um livro nulo")
+    public void deleteBookExceptionTest(){
+        //cenario
+        Book book = new Book() ;
+        book.setId(null);
+
+        //execução
+        org.junit.jupiter.api.Assertions.assertThrows( IllegalArgumentException.class, () ->  service.delete(book));
+
+        //verificação
+        Mockito.verify(repository, Mockito.never()).delete(book);
     }
 
 }
