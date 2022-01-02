@@ -29,17 +29,17 @@ public class BookRepositoryTest {
     @DisplayName("Deve retornar verdadeiro quando existir um livro na base com o isbn informado")
     public void returnTrueWhenIsbnExists(){
 
-        //cenário
+        //scenario
         String isbn ="123";
 
         Book book = createBook(isbn);
 
         entityManager.persist(book);
 
-        //execução
+        //executor
         boolean exists = bookRepository.existsByIsbn(isbn);
 
-        //verificação
+        //verification
         assertThat(exists).isTrue();
     }
 
@@ -51,30 +51,64 @@ public class BookRepositoryTest {
     @DisplayName("Deve retornar falso quando não existir um livro na base com o isbn informado")
     public void returnFalseWhenIsbnNotExists(){
 
-        //cenário
+        //scenario
         String isbn ="123";
 
         Book book = createBook(isbn);
 
 
-        //execução
+        //executor
         boolean exists = bookRepository.existsByIsbn("123");
 
-        //verificação
+        //verification
         assertThat(exists).isFalse();
     }
 
     @Test
     @DisplayName("Deve obter um livro por Id")
     public void findByIdTest(){
-        //cenario
+        //scenario
         Book book = createBook("123");
         entityManager.persist(book);
 
-        //execução
+        //executor
         Optional<Book> foundBook = bookRepository.findById(book.getId());
 
+        //verification
         assertThat(foundBook.isPresent()).isTrue();
+
+    }
+
+    @Test
+    @DisplayName("Deve salvar um livro por Id")
+    public void saveBookTest(){
+        //scenario
+        Book book = createBook("123");
+
+        //executor
+        Book savedBook = bookRepository.save(book);
+
+        //verification
+        assertThat(savedBook.getId()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Deve deletar um livro")
+    public void deleteBookTest(){
+
+        //scenario
+        Book book = createBook("123");
+        entityManager.persist(book);
+
+        Book foundBook = entityManager.find(Book.class, book.getId());
+
+        //executor
+         bookRepository.delete(foundBook);
+
+        Book deletedBook = entityManager.find(Book.class, book.getId());
+
+        //verification
+        assertThat(deletedBook).isNull();
 
     }
 
