@@ -1,6 +1,7 @@
 package com.lab.libraryapi20.service;
 
 import com.lab.libraryapi20.api.model.entity.Book;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
@@ -15,5 +16,7 @@ public interface BookService {
 
     Book update(Book book);
 
-    Object find(Book filter, Pageable pageRequest);
+    Page<Book> find(Book filter, Pageable pageRequest);
+
+    Optional<Book> getBookByIsbn(String isbn);
 }

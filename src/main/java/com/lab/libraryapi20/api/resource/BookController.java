@@ -77,24 +77,13 @@ public class BookController {
     @GetMapping
     public Page<BookDTO> find(BookDTO dto, Pageable pageRequest){
         Book filter = modelMapper.map(dto, Book.class);
-        Page<Book> result = (Page<Book>) service.find(filter, pageRequest);
+        Page<Book> result =  service.find(filter, pageRequest);
         List<BookDTO> list =  result.getContent().stream()
                 .map(entity -> modelMapper.map(entity, BookDTO.class))
                 .collect(Collectors.toList());
         return new PageImpl<BookDTO>(list, pageRequest, result.getTotalElements());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrors handleValidationException(MethodArgumentNotValidException ex){
-        BindingResult bindResult = ex.getBindingResult();
-        return new ApiErrors(bindResult);
-    }
 
-    @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrors handleBusinessException(BusinessException ex){
-        return new ApiErrors(ex);
-    }
 
 }
