@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -209,6 +210,22 @@ public class BookServiceTest {
         assertThat(result.getContent()).isEqualTo(books);
         assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
         assertThat(result.getPageable().getPageSize()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("Deve obter um livro por isbn")
+    public void getByIsbntest(){
+        //cenario
+        String isbn = "1234";
+        Mockito.when(repository.findByIsbn(isbn)).thenReturn(Optional.of(Book.builder().id(1L).isbn(isbn).build()));
+
+        //execução
+        Optional<Book> foundBook = service.getBookByIsbn(isbn);
+
+        //verificações
+        assertThat( foundBook.isPresent()).isTrue();
+        assertThat( foundBook.get().getIsbn()).isEqualTo(isbn);
+        verify(repository, atLeastOnce()).findByIsbn(isbn);
     }
 
 }

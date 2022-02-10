@@ -3,6 +3,7 @@ package com.lab.libraryapi20.service;
 import com.lab.libraryapi20.api.model.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
